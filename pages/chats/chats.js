@@ -1,4 +1,5 @@
-const { request } = require("../../utils/request");
+const { request, getToken } = require("../../utils/request");
+const { openConversation, startNewChat, TAB_INDEX, setTabBarSelected } = require("../../utils/tabNav");
 
 Page({
   data: {
@@ -7,6 +8,11 @@ Page({
   },
 
   onShow() {
+    if (!getToken()) {
+      wx.redirectTo({ url: "/pages/login/login" });
+      return;
+    }
+    setTabBarSelected(this, TAB_INDEX.chats);
     this.loadConversations();
   },
 
@@ -25,6 +31,9 @@ Page({
       })
       .catch((err) => {
         this.setData({ loading: false });
+        if (err.relogin) {
+          return;
+        }
         wx.showToast({
           title: err.message || "加载失败",
           icon: "none"
@@ -34,24 +43,11 @@ Page({
 
   openChat(event) {
     const { id, title } = event.currentTarget.dataset;
-    wx.navigateTo({
-      url: `/pages/index/index?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title || "新对话")}`
-    });
+    openConversation(id, title);
   },
 
   createChat() {
-    request({ url: "/api/conversations", method: "POST" })
-      .then((created) => {
-        wx.navigateTo({
-          url: `/pages/index/index?id=${encodeURIComponent(created.id)}&title=${encodeURIComponent(created.title || "新对话")}`
-        });
-      })
-      .catch((err) => {
-        wx.showToast({
-          title: err.message || "创建失败",
-          icon: "none"
-        });
-      });
+    startNewChat();
   },
 
   showActions(event) {

@@ -25,7 +25,7 @@
 
 .list {
   flex: 1;
-  height: calc(100vh - 180rpx);
+  height: calc(100vh - 280rpx - env(safe-area-inset-bottom));
   padding: 16rpx 0;
   box-sizing: border-box;
 }
@@ -76,7 +76,7 @@
 }
 
 .footer-tip {
-  padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom));
+  padding: 16rpx 24rpx;
   text-align: center;
   font-size: 22rpx;
   color: #94a3b8;

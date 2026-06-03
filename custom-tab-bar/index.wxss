@@ -1,0 +1,143 @@
+.tab-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: calc(100rpx + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: #f7f7f7;
+  border-top: 1px solid #d9d9d9;
+  box-sizing: border-box;
+  z-index: 9999;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 8rpx;
+  min-height: 100rpx;
+}
+
+.tab-item-center {
+  position: relative;
+  top: -12rpx;
+}
+
+.tab-icon {
+  width: 44rpx;
+  height: 44rpx;
+  margin-bottom: 4rpx;
+  box-sizing: border-box;
+}
+
+.chat-icon {
+  border: 3rpx solid #7f7f7f;
+  border-radius: 12rpx;
+}
+
+.chat-icon.active {
+  border-color: #07c160;
+}
+
+.chat-icon::after {
+  content: "";
+  display: block;
+  width: 18rpx;
+  height: 3rpx;
+  background: #7f7f7f;
+  margin: 14rpx auto 0;
+  border-radius: 2rpx;
+}
+
+.chat-icon.active::after {
+  background: #07c160;
+}
+
+.me-icon {
+  border: 3rpx solid #7f7f7f;
+  border-radius: 50%;
+  position: relative;
+}
+
+.me-icon.active {
+  border-color: #07c160;
+}
+
+.me-icon::before {
+  content: "";
+  position: absolute;
+  top: 8rpx;
+  left: 50%;
+  width: 14rpx;
+  height: 14rpx;
+  margin-left: -7rpx;
+  background: #7f7f7f;
+  border-radius: 50%;
+}
+
+.me-icon.active::before {
+  background: #07c160;
+}
+
+.me-icon::after {
+  content: "";
+  position: absolute;
+  bottom: 4rpx;
+  left: 50%;
+  width: 28rpx;
+  height: 16rpx;
+  margin-left: -14rpx;
+  border: 3rpx solid #7f7f7f;
+  border-top: none;
+  border-radius: 0 0 20rpx 20rpx;
+  box-sizing: border-box;
+}
+
+.me-icon.active::after {
+  border-color: #07c160;
+}
+
+.center-btn {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 16rpx;
+  background: #ededed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rpx;
+}
+
+.center-btn.active {
+  background: #07c160;
+}
+
+.center-plus {
+  font-size: 56rpx;
+  font-weight: 300;
+  color: #1f2d3d;
+  line-height: 1;
+}
+
+.center-btn.active .center-plus {
+  color: #ffffff;
+}
+
+.tab-label {
+  font-size: 20rpx;
+  color: #7f7f7f;
+}
+
+.tab-label.active {
+  color: #07c160;
+}
+
+.center-label {
+  margin-top: 2rpx;
+}

@@ -6,6 +6,9 @@ App({
   globalData: {
     env: ENV,
     apiBaseUrl: config.apiBaseUrl,
-    user: null
+    user: null,
+    quota: null,
+    loginQuota: null,
+    meRole: ""
   }
 });

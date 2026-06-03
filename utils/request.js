@@ -23,6 +23,62 @@ function buildHeaders(options) {
   return headers;
 }
 
+const RELOGIN_ERROR_CODES = new Set([
+  "UNAUTHORIZED",
+  "SESSION_IDLE_TIMEOUT",
+  "SESSION_EXPIRED",
+  "SESSION_REVOKED"
+]);
+
+function parseError(res) {
+  let data = res.data || {};
+  if (typeof data === "string") {
+    try {
+      data = JSON.parse(data);
+    } catch (e) {
+      data = {};
+    }
+  }
+  const errorCode = data.error || "";
+  const message = data.message || `HTTP ${res.statusCode}`;
+  const err = new Error(message);
+  err.errorCode = errorCode;
+  err.statusCode = res.statusCode;
+  return err;
+}
+
+function shouldRelogin(err) {
+  return err.statusCode === 401 || RELOGIN_ERROR_CODES.has(err.errorCode);
+}
+
+function handleAuthError(err) {
+  if (shouldRelogin(err)) {
+    clearToken();
+    wx.removeStorageSync("conversationId");
+    wx.showToast({ title: err.message || "登录已过期，请重新登录", icon: "none" });
+    wx.redirectTo({ url: "/pages/login/login" });
+    err.relogin = true;
+    return true;
+  }
+  if (err.errorCode === "LOGIN_LIMIT_EXCEEDED" || err.errorCode === "GUEST_QUOTA_EXCEEDED") {
+    wx.showModal({
+      title: "登录次数已用完",
+      content: err.message || "请联系管理员升级为会员",
+      showCancel: false
+    });
+    return true;
+  }
+  if (err.errorCode === "USER_DISABLED") {
+    clearToken();
+    wx.removeStorageSync("conversationId");
+    wx.showToast({ title: err.message || "账号已禁用", icon: "none" });
+    wx.redirectTo({ url: "/pages/login/login" });
+    err.relogin = true;
+    return true;
+  }
+  return false;
+}
+
 function request(options) {
   const url = `${getApiBaseUrl()}${options.url}`;
   return new Promise((resolve, reject) => {
@@ -37,8 +93,9 @@ function request(options) {
           resolve(res.data);
           return;
         }
-        const message = (res.data && res.data.message) || `HTTP ${res.statusCode}`;
-        reject(new Error(message));
+        const err = parseError(res);
+        handleAuthError(err);
+        reject(err);
       },
       fail(err) {
         const errMsg = (err && err.errMsg) || "network error";
@@ -64,5 +121,6 @@ module.exports = {
   request,
   setToken,
   clearToken,
-  getToken
+  getToken,
+  shouldRelogin
 };

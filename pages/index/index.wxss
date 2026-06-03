@@ -1,9 +1,10 @@
 .chat-page {
-  height: 100vh;
+  height: calc(100vh - 100rpx - env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   background: #f5f6fa;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .top-bar {
@@ -16,16 +17,42 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-.top-title {
+.top-spacer {
+  width: 80rpx;
+  flex-shrink: 0;
+}
+
+.top-center {
   flex: 1;
   text-align: center;
+  min-width: 0;
+  padding: 0 8rpx;
+}
+
+.top-title {
+  display: block;
   font-size: 30rpx;
   font-weight: 600;
   color: #1f2d3d;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding: 0 16rpx;
+}
+
+.top-meta {
+  display: block;
+  font-size: 20rpx;
+  color: #64748b;
+  margin-top: 4rpx;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.top-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4rpx;
 }
 
 .top-btn {
@@ -135,7 +162,7 @@
 }
 
 .composer-center-wrap {
-  width: 70vw;
+  width: 90vw;
   margin: 0 auto;
 }
 

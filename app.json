@@ -2,13 +2,36 @@
   "pages": [
     "pages/login/login",
     "pages/index/index",
-    "pages/chats/chats"
+    "pages/chats/chats",
+    "pages/profile/profile",
+    "pages/admin/users/users"
   ],
   "window": {
     "navigationBarTitleText": "升学咨询",
     "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTextStyle": "black",
     "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#7f7f7f",
+    "selectedColor": "#07c160",
+    "backgroundColor": "#f7f7f7",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/chats/chats",
+        "text": "会话"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "新对话"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我"
+      }
+    ]
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"

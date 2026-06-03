@@ -1,0 +1,60 @@
+<view class="page page-with-tabbar">
+  <view class="card">
+    <view class="section-title">个人资料</view>
+    <text class="profile-hint">头像、昵称需你主动选择（微信隐私规则）</text>
+    <view class="profile-edit-row">
+      <button class="avatar-picker" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image class="avatar" src="{{editAvatar}}" mode="aspectFill" binderror="onAvatarError" />
+      </button>
+      <view class="edit-fields">
+        <text class="field-label">昵称</text>
+        <input
+          class="nickname-input"
+          type="nickname"
+          placeholder="点击输入微信昵称"
+          value="{{editNickname}}"
+          bindinput="onNicknameInput"
+          bindblur="onNicknameBlur"
+        />
+        <button
+          class="save-profile-btn"
+          size="mini"
+          type="primary"
+          loading="{{savingProfile}}"
+          disabled="{{savingProfile || !profileDirty}}"
+          bindtap="saveProfile"
+        >
+          保存资料
+        </button>
+      </view>
+    </view>
+    <view class="readonly-meta">
+      <text class="meta">角色：{{roleLabel}}</text>
+      <text class="meta">状态：{{statusLabel}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">账号额度</view>
+    <view class="row" wx:if="{{isGuest}}">
+      <text class="label">登录次数</text>
+      <text class="value">{{quota.used}} / {{quota.limit}}（剩余 {{quota.remaining}}）</text>
+    </view>
+    <view class="row" wx:if="{{!isGuest}}">
+      <text class="value unlimited">会员权益：登录与查询不限次数</text>
+    </view>
+    <view wx:if="{{isGuest}}" class="quota-tip">
+      访客使用限制按授权登录次数统计，每次点击登录计 1 次；发消息不额外扣次。
+    </view>
+    <view wx:if="{{isGuest && quota.remaining <= 0}}" class="upgrade-tip">
+      登录次数已达上限，请联系管理员升级为会员（member）。
+    </view>
+  </view>
+
+  <view wx:if="{{isAdmin}}" class="card admin-card" bindtap="openAdmin">
+    <text class="admin-link">用户管理</text>
+    <text class="admin-arrow">›</text>
+  </view>
+
+  <button class="logout-btn" bindtap="handleLogout">退出登录</button>
+</view>

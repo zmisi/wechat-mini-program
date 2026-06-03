@@ -24,9 +24,14 @@
 
 <view class="chat-page">
   <view class="top-bar">
-    <view class="top-btn" bindtap="openChatList">会话</view>
-    <text class="top-title">{{chatTitle}}</text>
-    <view class="top-btn primary" bindtap="newChat">新对话</view>
+    <view class="top-spacer"></view>
+    <view class="top-center">
+      <text class="top-title">{{chatTitle}}</text>
+      <text wx:if="{{roleLabel}}" class="top-meta">{{roleLabel}}{{quotaHint}}</text>
+    </view>
+    <view class="top-actions">
+      <view wx:if="{{isAdmin}}" class="top-btn" bindtap="openAdmin">管理</view>
+    </view>
   </view>
 
   <!-- 无消息：输入框居中 -->

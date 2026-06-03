@@ -1,0 +1,18 @@
+<view class="tab-bar">
+  <view class="tab-item" data-index="0" bindtap="onSwitch">
+    <view class="tab-icon chat-icon {{selected === 0 ? 'active' : ''}}"></view>
+    <text class="tab-label {{selected === 0 ? 'active' : ''}}">会话</text>
+  </view>
+
+  <view class="tab-item tab-item-center" data-index="1" bindtap="onSwitch">
+    <view class="center-btn {{selected === 1 ? 'active' : ''}}">
+      <text class="center-plus">+</text>
+    </view>
+    <text class="tab-label center-label {{selected === 1 ? 'active' : ''}}">新对话</text>
+  </view>
+
+  <view class="tab-item" data-index="2" bindtap="onSwitch">
+    <view class="tab-icon me-icon {{selected === 2 ? 'active' : ''}}"></view>
+    <text class="tab-label {{selected === 2 ? 'active' : ''}}">我</text>
+  </view>
+</view>

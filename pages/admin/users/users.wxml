@@ -1,0 +1,15 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="empty">加载中…</view>
+  <scroll-view wx:else scroll-y class="list">
+    <view wx:for="{{users}}" wx:key="id" class="item">
+      <view class="item-main">
+        <text class="name">{{item.nickname || item.openid}}</text>
+        <text class="meta">{{item.role}} · {{item.status}} · 登录 {{item.quotaUsed}}/{{item.quotaLimit}}</text>
+      </view>
+      <view class="actions">
+        <button size="mini" data-id="{{item.id}}" data-role="{{item.role}}" data-status="{{item.status}}" bindtap="changeRole">改角色</button>
+        <button size="mini" data-id="{{item.id}}" data-role="{{item.role}}" data-status="{{item.status}}" bindtap="resetQuota">重置配额</button>
+      </view>
+    </view>
+  </scroll-view>
+</view>

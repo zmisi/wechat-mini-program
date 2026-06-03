@@ -3,3 +3,8 @@ page {
   color: #1f2d3d;
   min-height: 100%;
 }
+
+.page-with-tabbar {
+  padding-bottom: calc(100rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}

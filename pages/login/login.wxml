@@ -1,9 +1,21 @@
 <view class="container">
   <view class="card">
     <view class="title">高考升学咨询</view>
-    <view class="subtitle">请先完成微信授权登录</view>
-    <button class="login-btn" type="primary" loading="{{loading}}" bindtap="handleWechatLogin">
-      微信授权登录
+
+    <view class="consent-box">
+      <view class="consent-title">登录说明</view>
+      <text class="consent-text">使用微信 openid 完成账号识别与登录，无需填写资料。</text>
+      <text class="consent-text">头像与昵称可在登录后，于底部「我」个人中心设置。</text>
+    </view>
+
+    <button
+      class="login-btn"
+      type="primary"
+      loading="{{loading}}"
+      disabled="{{loading}}"
+      bindtap="handleWechatLogin"
+    >
+      微信一键登录
     </button>
   </view>
 </view>

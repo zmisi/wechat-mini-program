@@ -1,6 +1,13 @@
 const { request, clearToken, getToken } = require("../../utils/request");
-
-const CONVERSATION_KEY = "conversationId";
+const { formatGuestHeaderHint, syncMeSnapshot } = require("../../utils/quota");
+const {
+  CONVERSATION_KEY,
+  PENDING_CONVERSATION_KEY,
+  TAB_NEW_CHAT_KEY,
+  TAB_INDEX,
+  setTabBarSelected,
+  tabBarHeightPx
+} = require("../../utils/tabNav");
 
 Page({
   data: {
@@ -12,7 +19,10 @@ Page({
     hasMessages: false,
     scrollIntoView: "",
     scrollHeight: 400,
-    nextMsgId: 1
+    nextMsgId: 1,
+    roleLabel: "",
+    quotaHint: "",
+    isAdmin: false
   },
 
   onLoad(options) {
@@ -32,7 +42,67 @@ Page({
   onShow() {
     if (!getToken()) {
       wx.redirectTo({ url: "/pages/login/login" });
+      return;
     }
+    setTabBarSelected(this, TAB_INDEX.index);
+    this.fetchCurrentUser();
+    this.consumeTabNavigation();
+  },
+
+  consumeTabNavigation() {
+    if (wx.getStorageSync(TAB_NEW_CHAT_KEY)) {
+      wx.removeStorageSync(TAB_NEW_CHAT_KEY);
+      this.resetForNewChat();
+      return;
+    }
+    const pending = wx.getStorageSync(PENDING_CONVERSATION_KEY);
+    if (pending && pending.id) {
+      wx.removeStorageSync(PENDING_CONVERSATION_KEY);
+      wx.setStorageSync(CONVERSATION_KEY, pending.id);
+      this.setData({
+        conversationId: pending.id,
+        chatTitle: pending.title || "新对话"
+      });
+      this.loadMessages(pending.id);
+    }
+  },
+
+  fetchCurrentUser() {
+    return request({ url: "/api/auth/me" })
+      .then((res) => {
+        this.applyMeResponse(res);
+      })
+      .catch((err) => {
+        if (err.relogin) {
+          return;
+        }
+        clearToken();
+        wx.redirectTo({ url: "/pages/login/login" });
+      });
+  },
+
+  applyMeResponse(res) {
+    const app = getApp();
+    syncMeSnapshot(app, res);
+    const role = (res.user && res.user.role) || res.role || "guest";
+    const isGuest = role === "guest";
+    const roleMap = { admin: "管理员", member: "成员", guest: "访客" };
+    const quotaHint = isGuest ? formatGuestHeaderHint(res.quota) : "";
+    this.setData({
+      roleLabel: roleMap[role] || role,
+      quotaHint,
+      isAdmin: role === "admin"
+    });
+  },
+
+  refreshQuota() {
+    return request({ url: "/api/auth/me" })
+      .then((res) => this.applyMeResponse(res))
+      .catch(() => {});
+  },
+
+  openAdmin() {
+    wx.navigateTo({ url: "/pages/admin/users/users" });
   },
 
   onReady() {
@@ -41,7 +111,8 @@ Page({
 
   initScrollHeight() {
     const sys = wx.getSystemInfoSync();
-    this.setData({ scrollHeight: sys.windowHeight - 180 });
+    const tabBar = tabBarHeightPx();
+    this.setData({ scrollHeight: sys.windowHeight - 180 - tabBar });
   },
 
   updateScrollHeight() {
@@ -52,26 +123,10 @@ Page({
       const sys = wx.getSystemInfoSync();
       const topBar = (res[0] && res[0].height) || 44;
       const composer = (res[1] && res[1].height) || 100;
-      const scrollHeight = Math.max(sys.windowHeight - topBar - composer, 200);
+      const tabBar = tabBarHeightPx();
+      const scrollHeight = Math.max(sys.windowHeight - topBar - composer - tabBar, 200);
       this.setData({ scrollHeight });
     });
-  },
-
-  openChatList() {
-    wx.navigateTo({ url: "/pages/chats/chats" });
-  },
-
-  newChat() {
-    request({ url: "/api/conversations", method: "POST" })
-      .then((created) => {
-        wx.setStorageSync(CONVERSATION_KEY, created.id);
-        wx.redirectTo({
-          url: `/pages/index/index?id=${encodeURIComponent(created.id)}&title=${encodeURIComponent(created.title || "新对话")}`
-        });
-      })
-      .catch((err) => {
-        wx.showToast({ title: err.message || "创建失败", icon: "none" });
-      });
   },
 
   resetForNewChat() {
@@ -108,6 +163,9 @@ Page({
         });
       })
       .catch((err) => {
+        if (err.relogin) {
+          return;
+        }
         wx.showToast({ title: err.message || "加载消息失败", icon: "none" });
       });
   },
@@ -147,6 +205,9 @@ Page({
         })
         .catch((err) => {
           this.setData({ loading: false });
+          if (err.relogin) {
+            return;
+          }
           this.appendMessage("assistant", `请求失败：${err.message || "unknown error"}`);
           wx.showToast({ title: err.message || "发送失败", icon: "none" });
         });
@@ -167,6 +228,9 @@ Page({
         send(created.id);
       })
       .catch((err) => {
+        if (err.relogin) {
+          return;
+        }
         wx.showToast({ title: err.message || "创建会话失败", icon: "none" });
       });
   },
