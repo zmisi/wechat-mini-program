@@ -1,0 +1,80 @@
+<template name="chatComposer">
+  <view class="composer-center-wrap">
+    <view class="composer-center-input">
+      <textarea
+        class="input-center"
+        placeholder="{{placeholder}}"
+        value="{{inputText}}"
+        bindinput="onInput"
+        disabled="{{loading}}"
+        auto-height
+        maxlength="-1"
+        show-confirm-bar="{{false}}"
+      />
+      <view
+        class="send-icon-btn {{loading || !inputText ? 'disabled' : ''}}"
+        bindtap="sendMessage"
+      >
+        <view wx:if="{{loading}}" class="send-icon-loading"></view>
+        <view wx:else class="send-icon-arrow"></view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<view class="chat-page">
+  <view class="top-bar">
+    <view class="top-btn" bindtap="openChatList">会话</view>
+    <text class="top-title">{{chatTitle}}</text>
+    <view class="top-btn primary" bindtap="newChat">新对话</view>
+  </view>
+
+  <!-- 无消息：输入框居中 -->
+  <view wx:if="{{!hasMessages}}" class="center-stage">
+    <view class="empty-hint">
+      <text class="empty-title">高考升学咨询</text>
+      <text class="empty-desc">输入问题开始对话，例如：安徽物理类630分2025普通批可报哪些专业？</text>
+    </view>
+    <template
+      is="chatComposer"
+      data="{{placeholder: '输入升学问题…', inputText: inputText, loading: loading}}"
+    />
+  </view>
+
+  <!-- 有消息：消息区可滚动 + 底部输入 -->
+  <view wx:else class="chat-stage">
+    <scroll-view
+      class="messages"
+      scroll-y
+      enhanced
+      show-scrollbar
+      scroll-with-animation
+      scroll-into-view="{{scrollIntoView}}"
+      style="height: {{scrollHeight}}px;"
+    >
+      <view
+        wx:for="{{messages}}"
+        wx:key="id"
+        id="msg-{{item.id}}"
+        class="msg-row {{item.role}}"
+      >
+        <view class="bubble">
+          <text class="bubble-text" user-select>{{item.text}}</text>
+        </view>
+      </view>
+
+      <view wx:if="{{loading}}" class="msg-row assistant" id="msg-loading">
+        <view class="bubble loading-bubble">
+          <text class="bubble-text">正在思考，请稍候…</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="composer-bottom-bar">
+      <template
+        is="chatComposer"
+        data="{{placeholder: '继续追问…', inputText: inputText, loading: loading}}"
+      />
+    </view>
+  </view>
+</view>

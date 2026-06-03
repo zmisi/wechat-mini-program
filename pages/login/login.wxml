@@ -1,0 +1,9 @@
+<view class="container">
+  <view class="card">
+    <view class="title">高考升学咨询</view>
+    <view class="subtitle">请先完成微信授权登录</view>
+    <button class="login-btn" type="primary" loading="{{loading}}" bindtap="handleWechatLogin">
+      微信授权登录
+    </button>
+  </view>
+</view>

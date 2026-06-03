@@ -1,0 +1,36 @@
+<view class="page">
+  <view class="header">
+    <text class="header-title">会话列表</text>
+    <button class="new-btn" size="mini" type="primary" bindtap="createChat">新对话</button>
+  </view>
+
+  <view wx:if="{{loading}}" class="empty">加载中…</view>
+  <view wx:elif="{{conversations.length === 0}}" class="empty">暂无会话，点击右上角创建</view>
+
+  <scroll-view wx:else scroll-y class="list" enhanced show-scrollbar>
+    <view
+      wx:for="{{conversations}}"
+      wx:key="id"
+      class="item"
+      data-id="{{item.id}}"
+      data-title="{{item.title}}"
+      bindtap="openChat"
+      bindlongpress="showActions"
+    >
+      <view class="item-main">
+        <text class="item-title">{{item.title}}</text>
+        <text class="item-time">{{item.updatedAt}}</text>
+      </view>
+      <view
+        class="item-more"
+        data-id="{{item.id}}"
+        data-title="{{item.title}}"
+        catchtap="showActions"
+      >
+        ···
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="footer-tip">长按或点击 ··· 可重命名 / 归档 / 删除</view>
+</view>
