@@ -130,6 +130,10 @@
   box-sizing: border-box;
 }
 
+.assistant .bubble.has-table {
+  max-width: 94%;
+}
+
 .user .bubble {
   background: #07c160;
   color: #ffffff;
@@ -150,6 +154,93 @@
   line-height: 1.6;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.data-table-wrap {
+  margin-top: 20rpx;
+  padding: 16rpx;
+  background: #eef2f7;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+}
+
+.table-title {
+  display: block;
+  margin-bottom: 12rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #334155;
+}
+
+.table-h-scroll {
+  width: 100%;
+  margin-top: 4rpx;
+}
+
+.table-body-scroll {
+  display: block;
+}
+
+.data-table {
+  display: block;
+}
+
+.table-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+
+.table-header {
+  background: #e2e8f0;
+  border-radius: 8rpx 8rpx 0 0;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.table-body-scroll .table-row {
+  border-bottom: 1rpx solid #e2e8f0;
+  background: #eef2f7;
+}
+
+.table-header .table-cell-text {
+  font-weight: 600;
+  color: #334155;
+}
+
+.table-cell {
+  flex: 0 0 auto;
+  padding: 12rpx 10rpx;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.table-cell-text.align-left {
+  text-align: left;
+}
+
+.table-cell-text.align-center {
+  text-align: center;
+}
+
+.table-cell-text {
+  display: block;
+  width: 100%;
+  font-size: 22rpx;
+  line-height: 1.45;
+  color: #1f2d3d;
+}
+
+.table-cell-text.nowrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table-cell-text.wrap {
+  white-space: normal;
+  word-break: break-all;
 }
 
 .composer-bottom-bar {

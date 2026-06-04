@@ -1,5 +1,6 @@
 const { request, clearToken, getToken } = require("../../utils/request");
 const { formatGuestHeaderHint, syncMeSnapshot } = require("../../utils/quota");
+const { normalizeMessages } = require("../../utils/messageBlocks");
 const {
   CONVERSATION_KEY,
   PENDING_CONVERSATION_KEY,
@@ -146,13 +147,7 @@ Page({
   loadMessages(conversationId) {
     request({ url: `/api/conversations/${encodeURIComponent(conversationId)}/messages` })
       .then((rows) => {
-        const messages = (rows || [])
-          .filter((row) => row.role === "user" || row.role === "assistant")
-          .map((row, index) => ({
-            id: row.id || index + 1,
-            role: row.role,
-            text: row.text || ""
-          }));
+        const messages = normalizeMessages(rows);
         this.setData({
           messages,
           hasMessages: messages.length > 0,
@@ -197,7 +192,8 @@ Page({
       })
         .then((res) => {
           const assistantText = (res && res.assistant) || "（无回复内容）";
-          const assistantMsg = this.appendMessage("assistant", assistantText);
+          const tables = (res && res.tables) || [];
+          const assistantMsg = this.appendMessage("assistant", assistantText, tables);
           this.setData({
             loading: false,
             scrollIntoView: `msg-${assistantMsg.id}`
@@ -235,15 +231,20 @@ Page({
       });
   },
 
-  appendMessage(role, text) {
+  appendMessage(role, text, tables) {
     const id = this.data.nextMsgId;
-    const message = { id, role, text };
+    const normalized = normalizeMessages([{
+      id,
+      role,
+      text,
+      tables: tables || []
+    }])[0];
     this.setData({
-      messages: this.data.messages.concat(message),
+      messages: this.data.messages.concat(normalized),
       nextMsgId: id + 1,
       hasMessages: true
     });
-    return message;
+    return normalized;
   },
 
   scrollToBottom() {

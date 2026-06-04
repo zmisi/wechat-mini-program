@@ -63,8 +63,56 @@
         id="msg-{{item.id}}"
         class="msg-row {{item.role}}"
       >
-        <view class="bubble">
-          <text class="bubble-text" user-select>{{item.text}}</text>
+        <view class="bubble {{item.hasTables ? 'has-table' : ''}}">
+          <text wx:if="{{item.text}}" class="bubble-text" user-select>{{item.text}}</text>
+          <view
+            wx:for="{{item.tables}}"
+            wx:for-item="table"
+            wx:key="id"
+            class="data-table-wrap"
+          >
+            <text wx:if="{{table.title}}" class="table-title">{{table.title}}</text>
+            <scroll-view scroll-x enhanced show-scrollbar class="table-h-scroll">
+              <view class="data-table" style="width: {{table.tableWidthRpx}}rpx;">
+                <view class="table-row table-header">
+                  <view
+                    wx:for="{{table.columns}}"
+                    wx:for-item="col"
+                    wx:key="key"
+                    class="table-cell"
+                    style="width: {{col.widthRpx}}rpx;"
+                  >
+                    <text class="table-cell-text align-{{col.align}} {{col.wrap ? 'wrap' : 'nowrap'}}">{{col.label}}</text>
+                  </view>
+                </view>
+                <scroll-view
+                  scroll-y
+                  enhanced
+                  show-scrollbar
+                  class="table-body-scroll"
+                  style="height: {{table.bodyScrollHeightRpx}}rpx; width: {{table.tableWidthRpx}}rpx;"
+                >
+                  <view
+                    wx:for="{{table.rows}}"
+                    wx:for-item="row"
+                    wx:key="id"
+                    class="table-row"
+                  >
+                    <view
+                      wx:for="{{row.cells}}"
+                      wx:for-item="cell"
+                      wx:for-index="cellIndex"
+                      wx:key="cellIndex"
+                      class="table-cell"
+                      style="width: {{cell.widthRpx}}rpx;"
+                    >
+                      <text class="table-cell-text align-{{cell.align}} {{cell.wrap ? 'wrap' : 'nowrap'}}">{{cell.value}}</text>
+                    </view>
+                  </view>
+                </scroll-view>
+              </view>
+            </scroll-view>
+          </view>
         </view>
       </view>
 
