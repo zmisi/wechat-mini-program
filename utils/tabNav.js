@@ -39,8 +39,41 @@ function startNewChat() {
 
 function tabBarHeightPx() {
   const sys = wx.getSystemInfoSync();
-  const safeBottom = (sys.safeAreaInsets && sys.safeAreaInsets.bottom) || 0;
-  return 50 + safeBottom;
+  let safeBottom = (sys.safeAreaInsets && sys.safeAreaInsets.bottom) || 0;
+  if (!safeBottom && sys.safeArea) {
+    safeBottom = Math.max(0, sys.screenHeight - sys.safeArea.bottom);
+  }
+  const barRpx = 100 * sys.windowWidth / 750;
+  return barRpx + safeBottom;
+}
+
+/** Viewport-bottom offset (px) to align content above the custom tab bar. */
+function measureTabBarTopOffset(page) {
+  const fallback = tabBarHeightPx();
+  return new Promise((resolve) => {
+    if (typeof page.getTabBar !== "function") {
+      resolve(fallback);
+      return;
+    }
+    const tabBar = page.getTabBar();
+    if (!tabBar) {
+      resolve(fallback);
+      return;
+    }
+    wx.createSelectorQuery()
+      .in(tabBar)
+      .select(".tab-bar")
+      .boundingClientRect()
+      .exec((res) => {
+        const rect = res && res[0];
+        if (!rect || !rect.height) {
+          resolve(fallback);
+          return;
+        }
+        const sys = wx.getSystemInfoSync();
+        resolve(Math.max(Math.ceil(sys.windowHeight - rect.top), fallback));
+      });
+  });
 }
 
 module.exports = {
@@ -51,5 +84,6 @@ module.exports = {
   setTabBarSelected,
   openConversation,
   startNewChat,
-  tabBarHeightPx
+  tabBarHeightPx,
+  measureTabBarTopOffset
 };

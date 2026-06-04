@@ -4,7 +4,7 @@
   right: 0;
   bottom: 0;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-around;
   height: calc(100rpx + env(safe-area-inset-bottom));
   padding-bottom: env(safe-area-inset-bottom);
@@ -20,13 +20,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 8rpx;
   min-height: 100rpx;
-}
-
-.tab-item-center {
-  position: relative;
-  top: -12rpx;
 }
 
 .tab-icon {
@@ -56,6 +50,43 @@
 }
 
 .chat-icon.active::after {
+  background: #07c160;
+}
+
+.new-icon {
+  border: 3rpx solid #7f7f7f;
+  border-radius: 12rpx;
+  position: relative;
+}
+
+.new-icon.active {
+  border-color: #07c160;
+}
+
+.new-icon::before,
+.new-icon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: #7f7f7f;
+  border-radius: 2rpx;
+}
+
+.new-icon::before {
+  width: 18rpx;
+  height: 3rpx;
+  margin: -1.5rpx 0 0 -9rpx;
+}
+
+.new-icon::after {
+  width: 3rpx;
+  height: 18rpx;
+  margin: -9rpx 0 0 -1.5rpx;
+}
+
+.new-icon.active::before,
+.new-icon.active::after {
   background: #07c160;
 }
 
@@ -103,41 +134,12 @@
   border-color: #07c160;
 }
 
-.center-btn {
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: 16rpx;
-  background: #ededed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 2rpx;
-}
-
-.center-btn.active {
-  background: #07c160;
-}
-
-.center-plus {
-  font-size: 56rpx;
-  font-weight: 300;
-  color: #1f2d3d;
-  line-height: 1;
-}
-
-.center-btn.active .center-plus {
-  color: #ffffff;
-}
-
 .tab-label {
   font-size: 20rpx;
   color: #7f7f7f;
+  line-height: 1.2;
 }
 
 .tab-label.active {
   color: #07c160;
-}
-
-.center-label {
-  margin-top: 2rpx;
 }

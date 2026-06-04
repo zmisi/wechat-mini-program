@@ -71,7 +71,7 @@
             wx:key="id"
             class="data-table-wrap"
           >
-            <text wx:if="{{table.title}}" class="table-title">{{table.title}}</text>
+            <text wx:if="{{table.title}}" class="table-title {{table.tierClass}}">{{table.title}}</text>
             <scroll-view scroll-x enhanced show-scrollbar class="table-h-scroll">
               <view class="data-table" style="width: {{table.tableWidthRpx}}rpx;">
                 <view class="table-row table-header">
@@ -123,7 +123,7 @@
       </view>
     </scroll-view>
 
-    <view class="composer-bottom-bar">
+    <view class="composer-bottom-bar" style="bottom: {{composerBottom}}px;">
       <template
         is="chatComposer"
         data="{{placeholder: '继续追问…', inputText: inputText, loading: loading}}"

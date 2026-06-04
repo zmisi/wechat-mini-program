@@ -59,6 +59,22 @@ function buildDisplayRows(displayColumns, rows) {
   }));
 }
 
+function tierClassFromTitle(title) {
+  if (!title) {
+    return "";
+  }
+  if (title.startsWith("冲")) {
+    return "tier-reach";
+  }
+  if (title.startsWith("稳")) {
+    return "tier-steady";
+  }
+  if (title.startsWith("保")) {
+    return "tier-safe";
+  }
+  return "";
+}
+
 function prepareTables(tables) {
   return (tables || []).map((table, tableIndex) => {
     const displayColumns = buildDisplayColumns(table.columns || []);
@@ -66,9 +82,11 @@ function prepareTables(tables) {
     const tableWidthRpx = displayColumns.reduce((sum, col) => sum + col.widthRpx, 0);
     const rowCount = rows.length;
     const bodyScrollHeightRpx = Math.min(Math.max(rowCount * ROW_HEIGHT_RPX, 144), MAX_BODY_HEIGHT_RPX);
+    const title = table.title || "";
     return {
       id: `table-${tableIndex}`,
-      title: table.title || "",
+      title,
+      tierClass: tierClassFromTitle(title),
       columns: displayColumns,
       rows,
       bodyScrollHeightRpx,

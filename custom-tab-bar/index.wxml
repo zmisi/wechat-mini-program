@@ -4,11 +4,9 @@
     <text class="tab-label {{selected === 0 ? 'active' : ''}}">会话</text>
   </view>
 
-  <view class="tab-item tab-item-center" data-index="1" bindtap="onSwitch">
-    <view class="center-btn {{selected === 1 ? 'active' : ''}}">
-      <text class="center-plus">+</text>
-    </view>
-    <text class="tab-label center-label {{selected === 1 ? 'active' : ''}}">新对话</text>
+  <view class="tab-item" data-index="1" bindtap="onSwitch">
+    <view class="tab-icon new-icon {{selected === 1 ? 'active' : ''}}"></view>
+    <text class="tab-label {{selected === 1 ? 'active' : ''}}">新对话</text>
   </view>
 
   <view class="tab-item" data-index="2" bindtap="onSwitch">

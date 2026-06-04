@@ -7,7 +7,8 @@ const {
   TAB_NEW_CHAT_KEY,
   TAB_INDEX,
   setTabBarSelected,
-  tabBarHeightPx
+  tabBarHeightPx,
+  measureTabBarTopOffset
 } = require("../../utils/tabNav");
 
 Page({
@@ -20,6 +21,8 @@ Page({
     hasMessages: false,
     scrollIntoView: "",
     scrollHeight: 400,
+    composerBottom: 50,
+    keyboardHeight: 0,
     nextMsgId: 1,
     roleLabel: "",
     quotaHint: "",
@@ -27,6 +30,8 @@ Page({
   },
 
   onLoad(options) {
+    this.initComposerBottom();
+    this.bindKeyboardHeightListener();
     this.initScrollHeight();
     if (options.id) {
       const title = options.title ? decodeURIComponent(options.title) : "升学问答助手";
@@ -48,6 +53,8 @@ Page({
     setTabBarSelected(this, TAB_INDEX.index);
     this.fetchCurrentUser();
     this.consumeTabNavigation();
+    this.initComposerBottom();
+    wx.nextTick(() => this.updateScrollHeight());
   },
 
   consumeTabNavigation() {
@@ -107,7 +114,44 @@ Page({
   },
 
   onReady() {
+    this.initComposerBottom();
     this.updateScrollHeight();
+  },
+
+  onUnload() {
+    if (this.keyboardHeightHandler) {
+      wx.offKeyboardHeightChange(this.keyboardHeightHandler);
+    }
+  },
+
+  bindKeyboardHeightListener() {
+    this.keyboardHeightHandler = (res) => {
+      this.applyKeyboardHeight(res.height || 0);
+    };
+    wx.onKeyboardHeightChange(this.keyboardHeightHandler);
+  },
+
+  initComposerBottom() {
+    measureTabBarTopOffset(this).then((bottom) => {
+      if (this.data.keyboardHeight > 0) {
+        return;
+      }
+      this.setData({ composerBottom: bottom }, () => this.updateScrollHeight());
+    });
+  },
+
+  applyKeyboardHeight(keyboardHeight) {
+    if (!this.data.hasMessages) {
+      this.setData({ keyboardHeight });
+      return;
+    }
+    if (keyboardHeight > 0) {
+      this.setData({ keyboardHeight, composerBottom: keyboardHeight }, () => this.updateScrollHeight());
+      return;
+    }
+    measureTabBarTopOffset(this).then((bottom) => {
+      this.setData({ keyboardHeight: 0, composerBottom: bottom }, () => this.updateScrollHeight());
+    });
   },
 
   initScrollHeight() {
@@ -117,16 +161,24 @@ Page({
   },
 
   updateScrollHeight() {
-    const query = wx.createSelectorQuery().in(this);
-    query.select(".top-bar").boundingClientRect();
-    query.select(".composer-bottom-bar").boundingClientRect();
-    query.exec((res) => {
-      const sys = wx.getSystemInfoSync();
-      const topBar = (res[0] && res[0].height) || 44;
-      const composer = (res[1] && res[1].height) || 100;
-      const tabBar = tabBarHeightPx();
-      const scrollHeight = Math.max(sys.windowHeight - topBar - composer - tabBar, 200);
-      this.setData({ scrollHeight });
+    if (!this.data.hasMessages) {
+      return;
+    }
+    wx.nextTick(() => {
+      const query = wx.createSelectorQuery().in(this);
+      query.select(".top-bar").boundingClientRect();
+      query.select(".composer-bottom-bar").boundingClientRect();
+      query.exec((res) => {
+        const sys = wx.getSystemInfoSync();
+        const topBar = (res[0] && res[0].height) || 44;
+        const composer = (res[1] && res[1].height) || 88;
+        const bottomInset = this.data.composerBottom || tabBarHeightPx();
+        const scrollHeight = Math.max(
+          sys.windowHeight - topBar - composer - bottomInset,
+          200
+        );
+        this.setData({ scrollHeight });
+      });
     });
   },
 
@@ -182,7 +234,10 @@ Page({
         loading: true,
         hasMessages: true,
         scrollIntoView: `msg-${userMsg.id}`
-      }, () => this.updateScrollHeight());
+      }, () => {
+        this.initComposerBottom();
+        this.updateScrollHeight();
+      });
 
       request({
         url: `/api/conversations/${encodeURIComponent(conversationId)}/chat`,
