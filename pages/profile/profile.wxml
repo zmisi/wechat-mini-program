@@ -1,4 +1,8 @@
 <view class="page page-with-tabbar">
+  <view wx:if="{{showSetupBanner}}" class="setup-banner">
+    <text>请点头像选择微信头像，并填写昵称后保存</text>
+  </view>
+
   <view class="card">
     <view class="section-title">个人资料</view>
     <text class="profile-hint">头像、昵称需你主动选择（微信隐私规则）</text>

@@ -4,18 +4,37 @@
 
     <view class="consent-box">
       <view class="consent-title">登录说明</view>
-      <text class="consent-text">使用微信 openid 完成账号识别与登录，无需填写资料。</text>
-      <text class="consent-text">头像与昵称可在登录后，于底部「我」个人中心设置。</text>
+      <text class="consent-text">使用微信 openid 完成账号识别与登录。</text>
+      <text class="consent-text">登录后可授权使用头像、昵称，用于个人中心展示。</text>
     </view>
 
     <button
       class="login-btn"
       type="primary"
       loading="{{loading}}"
-      disabled="{{loading}}"
+      disabled="{{loading || showProfileConsent}}"
       bindtap="handleWechatLogin"
     >
       微信一键登录
     </button>
+  </view>
+</view>
+
+<!-- 登录成功后：头像昵称授权说明（配合微信隐私弹窗） -->
+<view wx:if="{{showProfileConsent}}" class="consent-mask" catchtouchmove="preventMove">
+  <view class="consent-panel">
+    <view class="consent-panel-title">获取你的头像、昵称</view>
+    <text class="consent-panel-desc">用于在「我」个人中心展示你的身份。微信要求你主动确认后方可选择头像与填写昵称，我们不会在未授权时读取。</text>
+    <text class="consent-panel-link" bindtap="openPrivacyContract">查看《用户隐私保护指引》</text>
+
+    <button
+      class="consent-agree-btn"
+      type="primary"
+      open-type="agreePrivacyAuthorization"
+      bindagreeprivacyauthorization="onAgreePrivacy"
+    >
+      允许使用头像和昵称
+    </button>
+    <button class="consent-skip-btn" bindtap="onSkipProfileSetup">暂不设置，进入首页</button>
   </view>
 </view>

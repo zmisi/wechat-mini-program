@@ -1,9 +1,16 @@
 const { request, setToken } = require("../../utils/request");
 const { syncMeSnapshot } = require("../../utils/quota");
+const {
+  needsProfileSetup,
+  openPrivacyContract,
+  markProfileSetupPending,
+  clearProfileSetupPending
+} = require("../../utils/privacy");
 
 Page({
   data: {
-    loading: false
+    loading: false,
+    showProfileConsent: false
   },
 
   onShow() {
@@ -13,11 +20,17 @@ Page({
     }
   },
 
+  preventMove() {},
+
+  openPrivacyContract() {
+    openPrivacyContract();
+  },
+
   handleWechatLogin() {
     if (this.data.loading) {
       return;
     }
-    this.setData({ loading: true });
+    this.setData({ loading: true, showProfileConsent: false });
     this.getLoginCode()
       .then((code) => request({
         url: "/api/auth/wechat/login",
@@ -27,6 +40,12 @@ Page({
       .then((res) => {
         setToken(res.token);
         syncMeSnapshot(getApp(), res);
+        const user = res.user || {};
+        if (needsProfileSetup(user)) {
+          this.setData({ loading: false, showProfileConsent: true });
+          return;
+        }
+        clearProfileSetupPending();
         wx.switchTab({ url: "/pages/index/index" });
       })
       .catch((err) => {
@@ -39,8 +58,22 @@ Page({
         });
       })
       .finally(() => {
-        this.setData({ loading: false });
+        if (!this.data.showProfileConsent) {
+          this.setData({ loading: false });
+        }
       });
+  },
+
+  onAgreePrivacy() {
+    markProfileSetupPending();
+    this.setData({ showProfileConsent: false });
+    wx.switchTab({ url: "/pages/profile/profile" });
+  },
+
+  onSkipProfileSetup() {
+    this.setData({ showProfileConsent: false });
+    clearProfileSetupPending();
+    wx.switchTab({ url: "/pages/index/index" });
   },
 
   getLoginCode() {

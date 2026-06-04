@@ -2,6 +2,11 @@ const { request, clearToken, getToken } = require("../../utils/request");
 const { TAB_INDEX, setTabBarSelected } = require("../../utils/tabNav");
 const { syncMeSnapshot } = require("../../utils/quota");
 const { isLocalAvatarPath, uploadAvatar } = require("../../utils/upload");
+const {
+  isProfileSetupPending,
+  clearProfileSetupPending,
+  needsProfileSetup
+} = require("../../utils/privacy");
 
 const DEFAULT_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0";
 const DEFAULT_NICKNAME = "微信用户";
@@ -30,7 +35,8 @@ Page({
     statusLabel: "",
     isGuest: false,
     isAdmin: false,
-    quota: { limit: 0, used: 0, remaining: 0 }
+    quota: { limit: 0, used: 0, remaining: 0 },
+    showSetupBanner: false
   },
 
   onShow() {
@@ -39,6 +45,7 @@ Page({
       return;
     }
     setTabBarSelected(this, TAB_INDEX.profile);
+    this.setData({ showSetupBanner: isProfileSetupPending() });
     this.loadProfile();
   },
 
@@ -159,6 +166,11 @@ Page({
       }))
       .then(() => this.loadProfile())
       .then(() => {
+        const user = this.data.user;
+        if (!needsProfileSetup(user)) {
+          clearProfileSetupPending();
+          this.setData({ showSetupBanner: false });
+        }
         wx.showToast({ title: "已保存", icon: "success" });
       })
       .catch((err) => {

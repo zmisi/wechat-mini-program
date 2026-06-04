@@ -5,6 +5,17 @@
   box-sizing: border-box;
 }
 
+.setup-banner {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
+  font-size: 26rpx;
+  line-height: 1.5;
+  padding: 20rpx 24rpx;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+}
+
 .card {
   background: #ffffff;
   border-radius: 20rpx;

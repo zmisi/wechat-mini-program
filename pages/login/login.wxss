@@ -54,3 +54,67 @@
 .login-btn {
   width: 100%;
 }
+
+.consent-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 40rpx;
+  box-sizing: border-box;
+}
+
+.consent-panel {
+  width: 100%;
+  max-width: 620rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 40rpx 32rpx 32rpx;
+  box-sizing: border-box;
+}
+
+.consent-panel-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1f2d3d;
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.consent-panel-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 16rpx;
+}
+
+.consent-panel-link {
+  display: block;
+  font-size: 26rpx;
+  color: #07c160;
+  margin-bottom: 28rpx;
+}
+
+.consent-agree-btn {
+  width: 100%;
+  margin-bottom: 16rpx;
+}
+
+.consent-skip-btn {
+  width: 100%;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 28rpx;
+  border: none;
+}
+
+.consent-skip-btn::after {
+  border: none;
+}
