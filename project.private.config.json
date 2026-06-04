@@ -1,7 +1,7 @@
 {
   "libVersion": "3.16.1",
   "condition": {},
-  "projectname": "ai admission expert",
+  "projectname": "升学问答助手",
   "setting": {
     "urlCheck": true,
     "coverView": false,

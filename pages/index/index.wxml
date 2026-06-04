@@ -37,7 +37,7 @@
   <!-- 无消息：输入框居中 -->
   <view wx:if="{{!hasMessages}}" class="center-stage">
     <view class="empty-hint">
-      <text class="empty-title">高考升学咨询</text>
+      <text class="empty-title">升学问答助手</text>
       <text class="empty-desc">输入问题开始对话，例如：安徽物理类630分2025普通批可报哪些专业？</text>
     </view>
     <template
