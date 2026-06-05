@@ -72,46 +72,71 @@
             class="data-table-wrap"
           >
             <text wx:if="{{table.title}}" class="table-title {{table.tierClass}}">{{table.title}}</text>
-            <scroll-view scroll-x enhanced show-scrollbar class="table-h-scroll">
-              <view class="data-table" style="width: {{table.tableWidthRpx}}rpx;">
-                <view class="table-row table-header">
-                  <view
-                    wx:for="{{table.columns}}"
-                    wx:for-item="col"
-                    wx:key="key"
-                    class="table-cell"
-                    style="width: {{col.widthRpx}}rpx;"
-                  >
-                    <text class="table-cell-text align-{{col.align}} {{col.wrap ? 'wrap' : 'nowrap'}}">{{col.label}}</text>
-                  </view>
-                </view>
-                <scroll-view
-                  scroll-y
-                  enhanced
-                  show-scrollbar
-                  class="table-body-scroll"
-                  style="height: {{table.bodyScrollHeightRpx}}rpx; width: {{table.tableWidthRpx}}rpx;"
+            <view wx:if="{{table.useGroups}}" class="school-group-list">
+              <view
+                wx:for="{{table.groups}}"
+                wx:for-item="group"
+                wx:key="id"
+                class="school-group"
+              >
+                <view
+                  class="school-header"
+                  bindtap="toggleSchoolExpand"
+                  data-msg-id="{{item.id}}"
+                  data-table-id="{{table.id}}"
+                  data-group-id="{{group.id}}"
                 >
-                  <view
-                    wx:for="{{table.rows}}"
-                    wx:for-item="row"
-                    wx:key="id"
-                    class="table-row"
-                  >
-                    <view
-                      wx:for="{{row.cells}}"
-                      wx:for-item="cell"
-                      wx:for-index="cellIndex"
-                      wx:key="cellIndex"
-                      class="table-cell"
-                      style="width: {{cell.widthRpx}}rpx;"
-                    >
-                      <text class="table-cell-text align-{{cell.align}} {{cell.wrap ? 'wrap' : 'nowrap'}}">{{cell.value}}</text>
-                    </view>
+                  <view class="school-header-main">
+                    <text class="school-name">{{group.universityName}}</text>
+                    <text class="school-meta">{{group.summary}}</text>
                   </view>
-                </scroll-view>
+                  <text class="school-chevron {{group.expanded ? 'expanded' : ''}}">›</text>
+                </view>
+                <view wx:if="{{group.expanded}}" class="major-table-wrap">
+                  <scroll-view scroll-x enhanced show-scrollbar class="table-h-scroll">
+                    <view class="data-table" style="width: {{group.tableWidthRpx}}rpx;">
+                      <view class="table-row table-header">
+                        <view
+                          wx:for="{{group.columns}}"
+                          wx:for-item="col"
+                          wx:key="key"
+                          class="table-cell"
+                          style="width: {{col.widthRpx}}rpx;"
+                        >
+                          <text class="table-cell-text align-{{col.align}} {{col.wrap ? 'wrap' : 'nowrap'}}">{{col.label}}</text>
+                        </view>
+                      </view>
+                      <scroll-view
+                        scroll-y
+                        enhanced
+                        show-scrollbar
+                        class="table-body-scroll"
+                        style="height: {{group.bodyScrollHeightRpx}}rpx; width: {{group.tableWidthRpx}}rpx;"
+                      >
+                        <view
+                          wx:for="{{group.rows}}"
+                          wx:for-item="row"
+                          wx:key="id"
+                          class="table-row"
+                        >
+                          <view
+                            wx:for="{{row.cells}}"
+                            wx:for-item="cell"
+                            wx:for-index="cellIndex"
+                            wx:key="cellIndex"
+                            class="table-cell"
+                            style="width: {{cell.widthRpx}}rpx;"
+                          >
+                            <text class="table-cell-text align-{{cell.align}} {{cell.wrap ? 'wrap' : 'nowrap'}}">{{cell.value}}</text>
+                          </view>
+                        </view>
+                      </scroll-view>
+                    </view>
+                  </scroll-view>
+                </view>
               </view>
-            </scroll-view>
+            </view>
+            <view wx:else class="table-empty-hint">暂无匹配专业</view>
           </view>
         </view>
       </view>

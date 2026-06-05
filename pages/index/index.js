@@ -307,5 +307,36 @@ Page({
     if (last) {
       this.setData({ scrollIntoView: `msg-${last.id}` });
     }
+  },
+
+  toggleSchoolExpand(event) {
+    const { msgId, tableId, groupId } = event.currentTarget.dataset;
+    const parsedMsgId = Number(msgId);
+    const messages = this.data.messages.map((message) => {
+      if (message.id !== parsedMsgId) {
+        return message;
+      }
+      return {
+        ...message,
+        tables: message.tables.map((table) => {
+          if (table.id !== tableId) {
+            return table;
+          }
+          return {
+            ...table,
+            groups: table.groups.map((group) => {
+              if (group.id !== groupId) {
+                return group;
+              }
+              return {
+                ...group,
+                expanded: !group.expanded
+              };
+            })
+          };
+        })
+      };
+    });
+    this.setData({ messages });
   }
 });

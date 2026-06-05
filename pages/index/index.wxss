@@ -185,6 +185,74 @@
   color: #15803d;
 }
 
+.school-group-list {
+  margin-top: 4rpx;
+}
+
+.school-group {
+  background: #ffffff;
+  border-radius: 12rpx;
+  overflow: hidden;
+  margin-bottom: 12rpx;
+}
+
+.school-group:last-child {
+  margin-bottom: 0;
+}
+
+.school-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 18rpx;
+}
+
+.school-header-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.school-name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1f2d3d;
+}
+
+.school-meta {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #64748b;
+}
+
+.school-chevron {
+  flex-shrink: 0;
+  margin-left: 12rpx;
+  font-size: 34rpx;
+  line-height: 1;
+  color: #94a3b8;
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+}
+
+.school-chevron.expanded {
+  transform: rotate(-90deg);
+}
+
+.major-table-wrap {
+  border-top: 1rpx solid #e2e8f0;
+  background: #eef2f7;
+  padding: 8rpx 0 0;
+}
+
+.table-empty-hint {
+  padding: 24rpx 12rpx;
+  font-size: 24rpx;
+  color: #94a3b8;
+  text-align: center;
+}
+
 .table-h-scroll {
   width: 100%;
   margin-top: 4rpx;
