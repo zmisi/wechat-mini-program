@@ -1,7 +1,7 @@
 {
   "libVersion": "3.16.1",
   "condition": {},
-  "projectname": "升学问答助手",
+  "projectname": "随手查升学",
   "setting": {
     "urlCheck": true,
     "coverView": false,

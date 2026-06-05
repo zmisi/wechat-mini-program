@@ -14,7 +14,7 @@ const {
 Page({
   data: {
     conversationId: "",
-    chatTitle: "升学问答助手",
+    chatTitle: "随手查升学",
     messages: [],
     inputText: "",
     loading: false,
@@ -34,7 +34,7 @@ Page({
     this.bindKeyboardHeightListener();
     this.initScrollHeight();
     if (options.id) {
-      const title = options.title ? decodeURIComponent(options.title) : "升学问答助手";
+      const title = options.title ? decodeURIComponent(options.title) : "随手查升学";
       wx.setStorageSync(CONVERSATION_KEY, options.id);
       this.setData({ conversationId: options.id, chatTitle: title });
       this.loadMessages(options.id);
@@ -185,7 +185,7 @@ Page({
   resetForNewChat() {
     this.setData({
       conversationId: "",
-      chatTitle: "升学问答助手",
+      chatTitle: "随手查升学",
       messages: [],
       inputText: "",
       loading: false,

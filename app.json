@@ -7,7 +7,7 @@
     "pages/admin/users/users"
   ],
   "window": {
-    "navigationBarTitleText": "升学问答助手",
+    "navigationBarTitleText": "随手查升学",
     "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTextStyle": "black",
     "backgroundTextStyle": "light"
