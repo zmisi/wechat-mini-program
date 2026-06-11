@@ -1,6 +1,6 @@
 <view class="container">
   <view class="card">
-    <view class="title">随手查升学</view>
+    <view class="title">个人志愿随手查</view>
 
     <view class="consent-box">
       <view class="consent-title">登录说明</view>

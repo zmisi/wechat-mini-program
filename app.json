@@ -7,7 +7,7 @@
     "pages/admin/users/users"
   ],
   "window": {
-    "navigationBarTitleText": "随手查升学",
+    "navigationBarTitleText": "个人志愿随手查",
     "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTextStyle": "black",
     "backgroundTextStyle": "light"
