@@ -377,6 +377,30 @@
   justify-content: center;
 }
 
+.report-icon-btn {
+  flex-shrink: 0;
+  min-width: 72rpx;
+  height: 72rpx;
+  margin-left: 8rpx;
+  padding: 0 16rpx;
+  border-radius: 36rpx;
+  background: #eef7ff;
+  border: 1rpx solid #b8d9ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.report-icon-btn.disabled {
+  opacity: 0.35;
+}
+
+.report-icon-label {
+  font-size: 24rpx;
+  color: #1677ff;
+  line-height: 1;
+}
+
 .send-icon-btn.disabled {
   opacity: 0.35;
 }

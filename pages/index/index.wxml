@@ -12,6 +12,12 @@
         show-confirm-bar="{{false}}"
       />
       <view
+        class="report-icon-btn {{loading || !inputText ? 'disabled' : ''}}"
+        bindtap="sendWorkflowReport"
+      >
+        <text class="report-icon-label">报告</text>
+      </view>
+      <view
         class="send-icon-btn {{loading || !inputText ? 'disabled' : ''}}"
         bindtap="sendMessage"
       >
@@ -38,7 +44,7 @@
   <view wx:if="{{!hasMessages}}" class="center-stage">
     <view class="empty-hint">
       <text class="empty-title">个人志愿随手查</text>
-      <text class="empty-desc">输入问题开始对话，例如：安徽物理类630分2025普通批可报哪些专业？</text>
+      <text class="empty-desc">输入问题开始对话，或点「报告」生成志愿分析报告，例如：安徽物理类630分合工大计算机和软件工程政策</text>
     </view>
     <template
       is="chatComposer"
@@ -143,7 +149,7 @@
 
       <view wx:if="{{loading}}" class="msg-row assistant" id="msg-loading">
         <view class="bubble loading-bubble">
-          <text class="bubble-text">正在思考，请稍候…</text>
+          <text class="bubble-text">{{loadingHint || "正在思考，请稍候…"}}</text>
         </view>
       </view>
     </scroll-view>

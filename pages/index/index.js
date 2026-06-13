@@ -18,6 +18,7 @@ Page({
     messages: [],
     inputText: "",
     loading: false,
+    loadingHint: "",
     hasMessages: false,
     scrollIntoView: "",
     scrollHeight: 400,
@@ -190,6 +191,7 @@ Page({
       inputText: "",
       loading: false,
       hasMessages: false,
+      loadingHint: "",
       scrollIntoView: "",
       nextMsgId: 1
     });
@@ -232,6 +234,7 @@ Page({
       this.setData({
         inputText: "",
         loading: true,
+        loadingHint: "正在思考，请稍候…",
         hasMessages: true,
         scrollIntoView: `msg-${userMsg.id}`
       }, () => {
@@ -251,11 +254,12 @@ Page({
           const assistantMsg = this.appendMessage("assistant", assistantText, tables);
           this.setData({
             loading: false,
+            loadingHint: "",
             scrollIntoView: `msg-${assistantMsg.id}`
           }, () => this.scrollToBottom());
         })
         .catch((err) => {
-          this.setData({ loading: false });
+          this.setData({ loading: false, loadingHint: "" });
           if (err.relogin) {
             return;
           }
@@ -277,6 +281,69 @@ Page({
           chatTitle: created.title || "新对话"
         });
         send(created.id);
+      })
+      .catch((err) => {
+        if (err.relogin) {
+          return;
+        }
+        wx.showToast({ title: err.message || "创建会话失败", icon: "none" });
+      });
+  },
+
+  sendWorkflowReport() {
+    const text = (this.data.inputText || "").trim();
+    if (!text || this.data.loading) {
+      return;
+    }
+
+    const runReport = (conversationId) => {
+      this.setData({
+        inputText: "",
+        loading: true,
+        loadingHint: "正在生成志愿报告…",
+        hasMessages: true
+      }, () => {
+        this.initComposerBottom();
+        this.updateScrollHeight();
+      });
+
+      request({
+        url: "/api/workflows/report",
+        method: "POST",
+        data: { message: text, conversationId },
+        timeout: 180000
+      })
+        .then((res) => {
+          if (!res || res.status !== "SUCCEEDED") {
+            const errMsg = (res && res.errorMessage) || "报告生成失败";
+            throw new Error(errMsg);
+          }
+          this.setData({ loading: false, loadingHint: "" });
+          this.loadMessages(conversationId);
+        })
+        .catch((err) => {
+          this.setData({ loading: false, loadingHint: "" });
+          if (err.relogin) {
+            return;
+          }
+          this.appendMessage("assistant", `报告生成失败：${err.message || "unknown error"}`);
+          wx.showToast({ title: err.message || "报告生成失败", icon: "none" });
+        });
+    };
+
+    if (this.data.conversationId) {
+      runReport(this.data.conversationId);
+      return;
+    }
+
+    request({ url: "/api/conversations", method: "POST" })
+      .then((created) => {
+        wx.setStorageSync(CONVERSATION_KEY, created.id);
+        this.setData({
+          conversationId: created.id,
+          chatTitle: created.title || "新对话"
+        });
+        runReport(created.id);
       })
       .catch((err) => {
         if (err.relogin) {
